@@ -25,7 +25,7 @@ export const botConfig = {
     activities: [
       {
         // Text users will see (example: "Playing /help | Titan Bot").
-        name: "Made with ❤️",
+        name: "Moderating and more! Made by Thomas_le123 ",
         // Activity type number (0 = Playing).
         type: 0, 
       },
