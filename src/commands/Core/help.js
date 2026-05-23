@@ -158,7 +158,7 @@ export async function createInitialHelpMenu(client) {
     );
 
     embed.setFooter({ 
-        text: "Made with ❤️" 
+        text: "Moderating and more! Made by Thomas_le123 " 
     });
     embed.setTimestamp();
 
