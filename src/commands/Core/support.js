@@ -1,13 +1,14 @@
 import { SlashCommandBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, MessageFlags } from 'discord.js';
 import { createEmbed } from '../../utils/embeds.js';
 import { logger } from '../../utils/logger.js';
-
 import { InteractionHelper } from '../../utils/interactionHelper.js';
+
 const SUPPORT_SERVER_URL = "https://discord.gg/yGWK3NGAVt";
+
 export default {
     data: new SlashCommandBuilder()
     .setName("support")
-    .setDescription("Get link to the support server (currently closed because it's not finished yet and i'm currently not working on it because i am exhausted, sorry)"),
+    .setDescription("Get a link to the support server (currently closed)"),
 
   async execute(interaction) {
     try {
@@ -20,7 +21,7 @@ export default {
 
       await InteractionHelper.safeReply(interaction, {
         embeds: [
-          createEmbed({ title: "🚑 Need Help?", description: "Join our official support server for assistance, report bugs, or suggest features. (Currently closed because the bot is stiill in developement but I (Thomas) am a little depressed so i am not really working on it anymore, sorry)" }),
+          createEmbed({ title: "🚑 Need Help?", description: "Join our official support server for assistance, report bugs, or suggest features. (Currently closed - bot in development)" })
         ],
         components: [actionRow],
         flags: MessageFlags.Ephemeral,
@@ -39,8 +40,3 @@ export default {
     }
   },
 };
-
-
-
-
-
