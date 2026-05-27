@@ -3,16 +3,16 @@ import { createEmbed } from '../../utils/embeds.js';
 import { logger } from '../../utils/logger.js';
 
 import { InteractionHelper } from '../../utils/interactionHelper.js';
-const SUPPORT_SERVER_URL = "https://discord.gg/QnWNz2dKCE";
+const SUPPORT_SERVER_URL = "https://discord.gg/yGWK3NGAVt";
 export default {
     data: new SlashCommandBuilder()
-    .setName("support")
-    .setDescription("Get link to the support server"),
+    .setName("support ")
+    .setDescription("Get link to the support server (currently closed because it's not finished yet and i'm currently not working on it because i am exhausted, sorry)"),
 
   async execute(interaction) {
     try {
       const supportButton = new ButtonBuilder()
-        .setLabel("Join Support Server")
+        .setLabel("Join Support Server (closed)")
         .setStyle(ButtonStyle.Link)
         .setURL(SUPPORT_SERVER_URL);
 
@@ -20,7 +20,7 @@ export default {
 
       await InteractionHelper.safeReply(interaction, {
         embeds: [
-          createEmbed({ title: "🚑 Need Help?", description: "Join our official support server for assistance, report bugs, or suggest features. If you are customizing this bot, remember to change the link in the code!" }),
+          createEmbed({ title: "🚑 Need Help?", description: "Join our official support server for assistance, report bugs, or suggest features. (Currently closed because the bot is stiill in developement but I (Thomas) am a little depressed so i am not really working on it anymore, sorry)" }),
         ],
         components: [actionRow],
         flags: MessageFlags.Ephemeral,
