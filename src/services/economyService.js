@@ -197,8 +197,8 @@ class EconomyService {
     const senderNext = (senderData.wallet || 0) - amount;
     const receiverNext = (receiverData.wallet || 0) + amount;
 
-    this.assertSafeBalance(senderNext, { operation: 'transfer.sender', senderId, amount });
-    this.assertSafeBalance(receiverNext, { operation: 'transfer.receiver', receiverId, amount });
+    this.assertSafeBalance(senderNext, { operation: 'transfer.sender', userId: senderId, amount });
+    this.assertSafeBalance(receiverNext, { operation: 'transfer.receiver', userId: receiverId, amount });
 
     senderData.wallet = senderNext;
     receiverData.wallet = receiverNext;
