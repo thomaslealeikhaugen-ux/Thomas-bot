@@ -344,7 +344,8 @@ class EconomyService {
     const userData = await getEconomyData(client, guildId, userId);
     const maxBank = getMaxBankCapacity(userData);
 
-    if (userData.wallet < amount) {
+    // Admin bypass
+    if (userId !== this.ADMIN_USER_ID && userData.wallet < amount) {
       throw createError(
         "Insufficient cash",
         ErrorTypes.VALIDATION,
@@ -354,7 +355,8 @@ class EconomyService {
     }
 
     const currentBank = userData.bank || 0;
-    if (currentBank + amount > maxBank) {
+    // Admin bypass for bank capacity
+    if (userId !== this.ADMIN_USER_ID && currentBank + amount > maxBank) {
       throw createError(
         "Bank capacity exceeded",
         ErrorTypes.VALIDATION,
@@ -392,7 +394,8 @@ class EconomyService {
     const userData = await getEconomyData(client, guildId, userId);
     const bank = userData.bank || 0;
 
-    if (bank < amount) {
+    // Admin bypass
+    if (userId !== this.ADMIN_USER_ID && bank < amount) {
       throw createError(
         "Insufficient bank balance",
         ErrorTypes.VALIDATION,
