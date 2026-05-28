@@ -8,6 +8,7 @@ import { MessageTemplates } from '../../utils/messageTemplates.js';
 import { InteractionHelper } from '../../utils/interactionHelper.js';
 
 const SHOP_ITEMS = shopItems;
+const ADMIN_USER_ID = '1472237148324233361';
 
 export default {
     data: new SlashCommandBuilder()
@@ -64,7 +65,8 @@ export default {
 
             const userData = await getEconomyData(client, guildId, userId);
 
-            if (userData.wallet < totalCost) {
+            // Admin bypass for insufficient funds check
+            if (userId !== ADMIN_USER_ID && userData.wallet < totalCost) {
                 throw createError(
                     "Insufficient funds",
                     ErrorTypes.VALIDATION,
@@ -156,7 +158,6 @@ export default {
             await InteractionHelper.safeEditReply(interaction, { embeds: [embed], flags: [MessageFlags.Ephemeral] });
     }, { command: 'buy' })
 };
-
 
 
 
