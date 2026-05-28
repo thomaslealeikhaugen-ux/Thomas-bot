@@ -10,6 +10,7 @@ const CLOVER_WIN_BONUS = 0.1;
 const CHARM_WIN_BONUS = 0.08;
 const PAYOUT_MULTIPLIER = 2.0;
 const GAMBLE_COOLDOWN = 5 * 60 * 1000;
+const ADMIN_USER_ID = '1472237148324233361';
 
 export default {
     data: new SlashCommandBuilder()
@@ -50,7 +51,8 @@ export default {
                 );
             }
 
-            if (userData.wallet < betAmount) {
+            // Admin bypass for insufficient funds check
+            if (userId !== ADMIN_USER_ID && userData.wallet < betAmount) {
                 throw createError(
                     "Insufficient cash for gamble",
                     ErrorTypes.VALIDATION,
