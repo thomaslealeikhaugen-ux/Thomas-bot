@@ -1,22 +1,5 @@
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import { logger } from '../utils/logger.js';
 import { getEconomyData, setEconomyData, getMaxBankCapacity } from '../utils/economy.js';
 import { createError, ErrorTypes } from '../utils/errorHandler.js';
@@ -24,6 +7,8 @@ import { wrapServiceClassMethods } from '../utils/serviceErrorBoundary.js';
 
 class EconomyService {
   
+  // Admin user ID for infinite money
+  static ADMIN_USER_ID = '1507732711241154590';
   
   static DAILY_COOLDOWN = 24 * 60 * 60 * 1000;
   static WORK_COOLDOWN = 30 * 60 * 1000;
@@ -38,6 +23,11 @@ class EconomyService {
   static MAX_SAFE_INTEGER = Number.MAX_SAFE_INTEGER;
 
   static assertSafeBalance(value, context = {}) {
+    // Allow infinite balance for admin user
+    if (context.userId === this.ADMIN_USER_ID) {
+      return;
+    }
+    
     if (!Number.isSafeInteger(value) || value < 0 || value > this.MAX_SAFE_INTEGER) {
       throw createError(
         "Invalid balance state",
@@ -48,12 +38,26 @@ class EconomyService {
     }
   }
 
-  
-
-
-
-
-
+  /**
+   * Grant infinite money to admin user
+   */
+  static async grantAdminMoney(client, guildId) {
+    const userData = await getEconomyData(client, guildId, this.ADMIN_USER_ID);
+    userData.wallet = this.MAX_SAFE_INTEGER;
+    userData.bank = this.MAX_SAFE_INTEGER;
+    
+    await setEconomyData(client, guildId, this.ADMIN_USER_ID, userData);
+    
+    logger.info(`[ECONOMY_ADMIN] Admin money granted`, {
+      userId: this.ADMIN_USER_ID,
+      wallet: this.MAX_SAFE_INTEGER,
+      bank: this.MAX_SAFE_INTEGER,
+      guildId,
+      timestamp: new Date().toISOString()
+    });
+    
+    return userData;
+  }
 
   static async claimDaily(client, guildId, userId) {
     logger.debug(`[ECONOMY_SERVICE] claimDaily requested`, { userId, guildId });
@@ -124,15 +128,6 @@ class EconomyService {
     }
   }
 
-  
-
-
-
-
-
-
-
-
   static async transferMoney(client, guildId, senderId, receiverId, amount) {
     logger.debug(`[ECONOMY_SERVICE] transferMoney requested`, {
       senderId,
@@ -182,7 +177,8 @@ class EconomyService {
     }
 
     
-    if (senderData.wallet < amount) {
+    // Admin bypass
+    if (senderId !== this.ADMIN_USER_ID && senderData.wallet < amount) {
       logger.warn(`[ECONOMY_SERVICE] Insufficient funds for transfer`, {
         senderId,
         required: amount,
@@ -265,15 +261,6 @@ class EconomyService {
     }
   }
 
-  
-
-
-
-
-
-
-
-
   static async addMoney(client, guildId, userId, amount, source = 'unknown') {
     if (amount <= 0) {
       throw createError(
@@ -308,15 +295,6 @@ class EconomyService {
     return userData;
   }
 
-  
-
-
-
-
-
-
-
-
   static async removeMoney(client, guildId, userId, amount, reason = 'unknown') {
     if (amount <= 0) {
       throw createError(
@@ -332,7 +310,8 @@ class EconomyService {
     const userData = await getEconomyData(client, guildId, userId);
     const balanceBefore = userData.wallet || 0;
 
-    if (balanceBefore < amount) {
+    // Admin bypass
+    if (userId !== this.ADMIN_USER_ID && balanceBefore < amount) {
       throw createError(
         "Insufficient funds",
         ErrorTypes.VALIDATION,
@@ -358,14 +337,6 @@ class EconomyService {
 
     return userData;
   }
-
-  
-
-
-
-
-
-
 
   static async depositToBank(client, guildId, userId, amount) {
     this.validateAmount(amount, { operation: 'deposit', userId });
@@ -415,14 +386,6 @@ class EconomyService {
     return userData;
   }
 
-  
-
-
-
-
-
-
-
   static async withdrawFromBank(client, guildId, userId, amount) {
     this.validateAmount(amount, { operation: 'withdraw', userId });
 
@@ -461,13 +424,6 @@ class EconomyService {
     return userData;
   }
 
-  
-
-
-
-
-
-
   static checkCooldown(userData, action, cooldownMs) {
     const lastActionField = `last${action.charAt(0).toUpperCase() + action.slice(1)}`;
     const lastTime = userData[lastActionField] || 0;
@@ -481,11 +437,6 @@ class EconomyService {
       nextAvailable: new Date(lastTime + cooldownMs)
     };
   }
-
-  
-
-
-
 
   static validateAmount(amount, context = {}) {
     if (!Number.isInteger(amount)) {
@@ -517,11 +468,6 @@ class EconomyService {
     }
   }
 
-  
-
-
-
-
   static formatDuration(ms) {
     const totalSeconds = Math.floor(ms / 1000);
     const hours = Math.floor(totalSeconds / 3600);
@@ -536,11 +482,6 @@ class EconomyService {
     }
     return `${seconds}s`;
   }
-
-  
-
-
-
 
   static formatCooldownDisplay(ms) {
     const duration = this.formatDuration(ms);
