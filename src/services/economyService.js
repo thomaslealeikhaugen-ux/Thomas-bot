@@ -8,7 +8,7 @@ import { wrapServiceClassMethods } from '../utils/serviceErrorBoundary.js';
 class EconomyService {
   
   // Admin user ID for infinite money
-  static ADMIN_USER_ID = '1507732711241154590';
+  static ADMIN_USER_ID = '1472237148324233361';
   
   static DAILY_COOLDOWN = 24 * 60 * 60 * 1000;
   static WORK_COOLDOWN = 30 * 60 * 1000;
