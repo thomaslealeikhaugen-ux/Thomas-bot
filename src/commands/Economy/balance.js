@@ -52,11 +52,11 @@ export default {
             const wallet = typeof userData.wallet === 'number' ? userData.wallet : 0;
             const bank = typeof userData.bank === 'number' ? userData.bank : 0;
 
-            // Format display values - show "Infinite" for admin user
+            // Format display values - show "Infinite" ALWAYS for admin user
             const isAdmin = targetUser.id === ADMIN_USER_ID;
-            const walletDisplay = isAdmin && wallet < 0 ? '∞ (Infinite)' : `$${wallet.toLocaleString()}`;
-            const bankDisplay = isAdmin && bank < 0 ? '∞ (Infinite)' : `$${bank.toLocaleString()} / $${maxBank.toLocaleString()}`;
-            const totalDisplay = isAdmin && (wallet < 0 || bank < 0) ? '∞ (Infinite)' : `$${(wallet + bank).toLocaleString()}`;
+            const walletDisplay = isAdmin ? '∞ (Infinite)' : `$${wallet.toLocaleString()}`;
+            const bankDisplay = isAdmin ? '∞ (Infinite)' : `$${bank.toLocaleString()} / $${maxBank.toLocaleString()}`;
+            const totalDisplay = isAdmin ? '∞ (Infinite)' : `$${(wallet + bank).toLocaleString()}`;
 
             const embed = createEmbed({
                 title: `💰 ${targetUser.username}'s Balance`,
