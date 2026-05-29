@@ -109,9 +109,13 @@ userData.lastGamble = now;
 
             const newCash = userData.wallet;
 
+            // Format balance display for admin
+            const isAdmin = userId === ADMIN_USER_ID;
+            const newCashDisplay = isAdmin ? '∞ (Infinite)' : `$${newCash.toLocaleString()}`;
+
             resultEmbed.addFields({
                 name: "💵 New Cash Balance",
-                value: `$${newCash.toLocaleString()}`,
+                value: newCashDisplay,
                 inline: true,
             });
 
@@ -132,7 +136,5 @@ userData.lastGamble = now;
             await InteractionHelper.safeEditReply(interaction, { embeds: [resultEmbed] });
     }, { command: 'gamble' })
 };
-
-
 
 

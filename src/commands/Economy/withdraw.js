@@ -5,6 +5,9 @@ import { withErrorHandling, createError, ErrorTypes } from '../../utils/errorHan
 import { MessageTemplates } from '../../utils/messageTemplates.js';
 
 import { InteractionHelper } from '../../utils/interactionHelper.js';
+
+const ADMIN_USER_ID = '1472237148324233361';
+
 export default {
     data: new SlashCommandBuilder()
         .setName('withdraw')
@@ -64,6 +67,11 @@ export default {
 
             await setEconomyData(client, guildId, userId, userData);
 
+            // Format balance display for admin
+            const isAdmin = userId === ADMIN_USER_ID;
+            const walletDisplay = isAdmin ? '∞ (Infinite)' : `$${userData.wallet.toLocaleString()}`;
+            const bankDisplay = isAdmin ? '∞ (Infinite)' : `$${userData.bank.toLocaleString()}`;
+
             const embed = MessageTemplates.SUCCESS.DATA_UPDATED(
                 "withdrawal",
                 `You successfully withdrew **$${withdrawAmount.toLocaleString()}** from your bank.`
@@ -71,12 +79,12 @@ export default {
                 .addFields(
                     {
                         name: "💵 New Cash Balance",
-                        value: `$${userData.wallet.toLocaleString()}`,
+                        value: walletDisplay,
                         inline: true,
                     },
                     {
                         name: "🏦 New Bank Balance",
-                        value: `$${userData.bank.toLocaleString()}`,
+                        value: bankDisplay,
                         inline: true,
                     },
                 );

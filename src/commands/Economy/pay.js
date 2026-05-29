@@ -7,6 +7,8 @@ import { InteractionHelper } from '../../utils/interactionHelper.js';
 import { MessageTemplates } from '../../utils/messageTemplates.js';
 import EconomyService from '../../services/economyService.js';
 
+const ADMIN_USER_ID = '1472237148324233361';
+
 export default {
     data: new SlashCommandBuilder()
         .setName('pay')
@@ -105,6 +107,10 @@ export default {
             const updatedSenderData = await getEconomyData(client, guildId, senderId);
             const updatedReceiverData = await getEconomyData(client, guildId, receiver.id);
 
+            // Format balance display for admin
+            const isAdminSender = senderId === ADMIN_USER_ID;
+            const senderBalanceDisplay = isAdminSender ? '∞ (Infinite)' : `$${updatedSenderData.wallet.toLocaleString()}`;
+
             const embed = MessageTemplates.SUCCESS.DATA_UPDATED(
                 "payment",
                 `You successfully paid **${receiver.username}** the amount of **$${amount.toLocaleString()}**!`
@@ -117,7 +123,7 @@ export default {
                     },
                     {
                         name: "💵 Your New Balance",
-                        value: `$${updatedSenderData.wallet.toLocaleString()}`,
+                        value: senderBalanceDisplay,
                         inline: true,
                     },
                 )
@@ -151,8 +157,5 @@ export default {
             }
     }, { command: 'pay' })
 };
-
-
-
 
 

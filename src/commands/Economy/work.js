@@ -9,6 +9,7 @@ const WORK_COOLDOWN = 30 * 60 * 1000;
 const MIN_WORK_AMOUNT = 50;
 const MAX_WORK_AMOUNT = 300;
 const LAPTOP_MULTIPLIER = 1.5;
+const ADMIN_USER_ID = '1472237148324233361';
 const WORK_JOBS = [
     "Software Developer",
     "Barista",
@@ -97,6 +98,10 @@ export default {
                 timestamp: new Date().toISOString()
             });
 
+            // Format balance display for admin
+            const isAdmin = userId === ADMIN_USER_ID;
+            const balanceDisplay = isAdmin ? '∞ (Infinite)' : `$${userData.wallet.toLocaleString()}`;
+
             const embed = successEmbed(
                 "💼 Work Complete!",
                 `You worked as a **${job}** and earned **$${earned.toLocaleString()}**!${multiplierMessage}`
@@ -104,7 +109,7 @@ export default {
                 .addFields(
                     {
                         name: "💰 New Balance",
-                        value: `$${userData.wallet.toLocaleString()}`,
+                        value: balanceDisplay,
                         inline: true,
                     },
                     {
@@ -121,7 +126,5 @@ export default {
             await InteractionHelper.safeEditReply(interaction, { embeds: [embed] });
     }, { command: 'work' })
 };
-
-
 
 

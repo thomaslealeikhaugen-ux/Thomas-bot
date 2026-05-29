@@ -4,6 +4,8 @@ import { withErrorHandling, createError, ErrorTypes } from '../../utils/errorHan
 import { logger } from '../../utils/logger.js';
 import { InteractionHelper } from '../../utils/interactionHelper.js';
 
+const ADMIN_USER_ID = '1472237148324233361';
+
 export default {
     data: new SlashCommandBuilder()
         .setName("eleaderboard")
@@ -42,9 +44,11 @@ export default {
                 const userData = await client.db.get(key);
 
                 if (userData) {
+                    // Admin always shows infinite
+                    const netWorth = userId === ADMIN_USER_ID ? Infinity : (userData.wallet || 0) + (userData.bank || 0);
                     allUserData.push({
                         userId: userId,
-                        net_worth: (userData.wallet || 0) + (userData.bank || 0),
+                        net_worth: netWorth,
                     });
                 }
             }
@@ -63,8 +67,11 @@ export default {
                 const rank = i + 1;
                 const emoji = rankEmoji[i] || `**#${rank}**`;
 
+                // Display infinite for admin, normal for others
+                const displayValue = user.net_worth === Infinity ? '∞ (Infinite)' : user.net_worth.toLocaleString();
+
                 leaderboardEntries.push(
-                    `${emoji} <@${user.userId}> - 🏦 ${user.net_worth.toLocaleString()}`,
+                    `${emoji} <@${user.userId}> - 🏦 ${displayValue}`,
                 );
             }
 
@@ -87,8 +94,5 @@ export default {
             await InteractionHelper.safeEditReply(interaction, { embeds: [embed] });
     }, { command: 'eleaderboard' })
 };
-
-
-
 
 
