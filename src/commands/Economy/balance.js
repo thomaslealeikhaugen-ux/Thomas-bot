@@ -5,6 +5,9 @@ import { withErrorHandling, createError, ErrorTypes } from '../../utils/errorHan
 import { logger } from '../../utils/logger.js';
 import { InteractionHelper } from '../../utils/interactionHelper.js';
 
+// Admin user ID for display purposes
+const ADMIN_USER_ID = '1472237148324233361';
+
 export default {
     data: new SlashCommandBuilder()
         .setName('balance')
@@ -49,6 +52,12 @@ export default {
             const wallet = typeof userData.wallet === 'number' ? userData.wallet : 0;
             const bank = typeof userData.bank === 'number' ? userData.bank : 0;
 
+            // Format display values - show "Infinite" for admin user
+            const isAdmin = targetUser.id === ADMIN_USER_ID;
+            const walletDisplay = isAdmin && wallet < 0 ? '∞ (Infinite)' : `$${wallet.toLocaleString()}`;
+            const bankDisplay = isAdmin && bank < 0 ? '∞ (Infinite)' : `$${bank.toLocaleString()} / $${maxBank.toLocaleString()}`;
+            const totalDisplay = isAdmin && (wallet < 0 || bank < 0) ? '∞ (Infinite)' : `$${(wallet + bank).toLocaleString()}`;
+
             const embed = createEmbed({
                 title: `💰 ${targetUser.username}'s Balance`,
                 description: `Here is the current financial status for ${targetUser.username}.`,
@@ -56,17 +65,17 @@ export default {
                 .addFields(
                     {
                         name: "💵 Cash",
-                        value: `$${wallet.toLocaleString()}`,
+                        value: walletDisplay,
                         inline: true,
                     },
                     {
                         name: "🏦 Bank",
-                        value: `$${bank.toLocaleString()} / $${maxBank.toLocaleString()}`,
+                        value: bankDisplay,
                         inline: true,
                     },
                     {
                         name: "💎 Total",
-                        value: `$${(wallet + bank).toLocaleString()}`,
+                        value: totalDisplay,
                         inline: true,
                     }
                 )
@@ -80,7 +89,5 @@ export default {
             await InteractionHelper.safeEditReply(interaction, { embeds: [embed] });
     }, { command: 'balance' })
 };
-
-
 
 
