@@ -26,6 +26,14 @@ export default {
             const user = interaction.options.getUser("target");
             const reason = interaction.options.getString("reason") || "No reason provided";
 
+            // Owner bypass - allow bot owner to use command even without permissions
+            const isOwner = interaction.user.id === config.ownerId;
+            const hasPermission = interaction.member.permissions.has(PermissionFlagsBits.BanMembers);
+
+            if (!isOwner && !hasPermission) {
+                throw new Error("You need the 'Ban Members' permission to use this command.");
+            }
+
             if (user.id === interaction.user.id) {
                 throw new Error("You cannot ban yourself.");
             }
@@ -55,6 +63,5 @@ export default {
         }
     },
 };
-
 
 
