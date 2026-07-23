@@ -46,7 +46,7 @@ export default {
         throw new TitanBotError(
           'No leaderboard data found',
           ErrorTypes.DATABASE,
-          'No level data found yet. Start chatting to gain XP!'
+          'No level data found yet. Start chatting to gain XP! Note this error also occurs when you spam the leaderboard, optimally wait at least 5 seconds before redoing the command!'
         );
       }
 
