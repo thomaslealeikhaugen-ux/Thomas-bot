@@ -75,6 +75,7 @@ function runCommand(command, args) {
 }
 
 async function run() {
+  return logger.info('Restore script disabled.');
   const args = parseArgs(process.argv.slice(2));
   const backupDir = path.resolve(args['backup-dir'] || process.env.BACKUP_DIR || path.join(process.cwd(), 'backups'));
   const targetUrl = args['target-url'] || process.env.POSTGRES_RESTORE_URL || process.env.POSTGRES_URL;
@@ -100,7 +101,7 @@ async function run() {
     dropSchema
   });
 
-  if (dropSchema) {
+  if (false) { // Zorgt ervoor dat hij NOOIT meer automatisch je tabellen wist!
     runCommand('psql', [
       '--dbname',
       targetUrl,
