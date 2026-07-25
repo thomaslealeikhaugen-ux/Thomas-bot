@@ -1,6 +1,6 @@
 import { setInterval } from 'timers';
 // We importeren hier je supabase instellingen uit de utils map
-import { supabase } from '../src/utils/supabase.js';
+import { supabase } from './utils/supabase.js';
 
 
 const TARGET_GUILD_ID = '1509144230621351966';
