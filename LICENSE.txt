@@ -1,3 +1,6 @@
+Although this project is forked and based out of the original bot repository from Mitch, I do want to notice i heavily edited this bot and you can't say anymore that i just forked this and didnt do anything about it. I scripted a lot on this bot, still this stays made on the base of Mitch's TitanBot repository!
+
+
 MIT License
 
 Copyright (c) 2026 codebymitch
