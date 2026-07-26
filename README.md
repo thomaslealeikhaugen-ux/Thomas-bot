@@ -1,0 +1,4 @@
+# Thomas Infinity Bot V1
+A powerful, all-in-one Discord assistant built for every server.
+
+https://discord.gg/yGWK3NGAVt
